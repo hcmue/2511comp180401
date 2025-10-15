@@ -9,3 +9,4 @@ with open("student_data.json", "r", encoding="utf8") as mf:
     GPA = sum([item["gpa"]*item["sotc"] for item in data]) \
         / sum([item["sotc"] for item in data])
     print(GPA)
+

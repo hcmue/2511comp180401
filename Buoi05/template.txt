@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>HÓA ĐƠN</h2>
+    <div>
+        Họ tên: {{ ho_ten }}<br>
+        Phone: {{ phone }}<br>
+        Chi tiết:<br>
+        {% for item in danh_sach %}
+            <div>{{ item.ten }} x {{ item.soluong }}</div>
+
+            
+        {% endfor %}
+    </div>
+</body>
+
+</html>
