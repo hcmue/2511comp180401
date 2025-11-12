@@ -1,6 +1,11 @@
 from fastapi import  FastAPI, HTTPException, status
+from fastapi.responses import HTMLResponse
 import json
 from pydantic import BaseModel
+from fastapi import UploadFile
+import shutil
+import os
+
 
 app = FastAPI()
 
@@ -52,3 +57,20 @@ def create_new_student(model: Student):
                 detail=f"Student {model.id} is existed",
             )
     # Save
+
+
+# from fastapi.responses import HTMLResponse
+@app.get("/hello", response_class=HTMLResponse)
+def hello():
+    return "<html><head></head><body><h1>HELLO</h1></body></html>"
+
+
+# from fastapi import UploadFile
+# import shutil
+# Cài thêm pip install python-multipart
+@app.post("/upload")
+def upload_file(file: UploadFile):
+    my_filename = os.path.join(os.getcwd(), "data", file.filename)
+    with open(my_filename, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    return {"filename": file.filename}
