@@ -1,5 +1,6 @@
 from fastapi import  FastAPI, HTTPException, status
 import json
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -15,18 +16,39 @@ def load_students():
         print(ex)
         return []
 
+def get_student_by_id(id):
+    data = load_students()  
+    for student in data:
+        if student["id"] == id:
+            return student
+    return None
+
+class Student(BaseModel):
+    id: str
+    name: str
+    mark: float
+    gpa: str
+
 @app.get("/students")
 def get_students():
     return load_students()
 
 @app.get("/students/{id}")
 def get_students(id:int):
-    data = load_students()
-    for student in data:
-        if student["id"] == id:
-            return student
-    # return None
+    student = get_student_by_id(id)
+    if student is not None:
+        return student
     raise HTTPException(
             status_code=404,
             detail=f"Not found {id}",
         )
+
+@app.post("/students")
+def create_new_student(model: Student):
+    student = get_student_by_id(model.id)
+    if student is not None:
+        raise HTTPException(
+                status_code=400,                
+                detail=f"Student {model.id} is existed",
+            )
+    # Save

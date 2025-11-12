@@ -8,5 +8,12 @@
 - Chạy:
   `fastapi dev main.py`
 
+- Định nghĩa lớp:
+
+```from pydantic import BaseModel
+class XYZ(BaseModel):
+    pass
+```
+
 - Bài tập 1:
   - Thêm các API GET, POST, PUT, DELETE cho lớp Sinh Viên
