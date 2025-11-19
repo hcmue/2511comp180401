@@ -17,6 +17,16 @@ class User(SQLModel, table=True):
     password: str
     role: str
     
+class Loai(SQLModel, table=True):    
+    MaLoai: int | None = Field(default=None, primary_key=True)
+    TenLoai: str = Field(index=True)
+
+class HangHoa(SQLModel, table=True):    
+    MaHH: int | None = Field(default=None, primary_key=True)
+    TenHH: str = Field(index=True)
+    Hinh: str = Field()
+    MaLoai: int | None =  Field(foreign_key="loai.MaLoai")
+    
 # PyMySQL
 engine = create_engine("mysql+pymysql://root:@localhost/2521comp180401", echo=True)
 
@@ -39,3 +49,20 @@ def on_startup():
 def root():
     return {"message": "Hello World"}
     
+@app.get("/heroes/")
+def read_heroes(
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100,
+) -> list[Hero]:
+    heroes = session.exec(select(Hero).offset(offset).limit(limit)).all()
+    return heroes
+
+@app.post("/heroes/", response_model=Hero)
+def create_hero(*, session: SessionDep, hero: Hero):
+    print("Entry", hero)
+    session.add(hero)
+    session.commit()
+    session.refresh(hero)
+    print("Exit", hero)
+    return hero
